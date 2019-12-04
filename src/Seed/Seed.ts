@@ -1,4 +1,5 @@
 import { AbstractTile } from "../Tile/AbstractTile";
+import { EmptySeedException } from "../Exceptions/EmptySeedException";
 
 export class Seed {
   constructor(private tiles: AbstractTile[] = []) {}
@@ -7,7 +8,7 @@ export class Seed {
     const tile = this.tiles.shift();
 
     if (tile === undefined) {
-      throw new Error("Seed is empty!");
+      throw new EmptySeedException();
     }
 
     return tile;

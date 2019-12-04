@@ -6,8 +6,8 @@ export class Vector2 {
     end: Vector2,
     next: (vector: Vector2) => void
   ): void {
-    for (let y = start.y; y <= end.y; y++) {
-      for (let x = start.x; x <= end.x; x++) {
+    for (let x = start.x; x <= end.x; x++) {
+      for (let y = start.y; y <= end.y; y++) {
         next(new Vector2(x, y));
       }
     }

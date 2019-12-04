@@ -2,27 +2,49 @@ import { Column } from "../Column/Column";
 import { Vector2 } from "../Vector/Vector2";
 import { Seed } from "../Seed/Seed";
 import { AbstractTile } from "../Tile/AbstractTile";
+import { EmptySeedException } from "../Exceptions/EmptySeedException";
+import * as PIXI from "pixi.js";
+import { AbstractRenderer } from "../Renderer/AbstractRenderer";
+import { application } from "../index";
 
 export class Board {
   private columns: Column[] = [];
+  private sprite: PIXI.Sprite;
 
-  constructor(private size: Vector2 = new Vector2(5, 5)) {
-    // Build columns
-    Vector2.fromTo(Vector2.zero(), size, vector => {
-      try {
-        this.getColumn(vector.y);
-      } catch (e) {
-        this.columns[vector.y] = new Column();
-      }
-    });
+  constructor(private size: Vector2) {
+    for (let c = 0; c < this.size.x; c++) {
+      this.columns.push(new Column(new Vector2(1, size.y), c));
+    }
+  }
+
+  public start(): void {
+    this.columns.forEach(column => column.start());
+  }
+
+  public update(): void {
+    this.columns.forEach(column => column.update());
+  }
+
+  public getSize(): Vector2 {
+    return this.size;
   }
 
   public fill(seed: Seed): void {
-    Vector2.fromTo(Vector2.zero(), this.size, vector => {
-      const tile = seed.dequeue();
+    this.columns.forEach(column => {
+      while (!column.isFull()) {
+        try {
+          const tile = seed.dequeue();
 
-      tile.setPosition(vector);
-      this.getColumn(vector.y).push(tile);
+          tile.setVisible(true);
+          column.addTile(tile);
+        } catch (error) {
+          if (!(error instanceof EmptySeedException)) {
+            throw error;
+          }
+
+          break;
+        }
+      }
     });
   }
 
@@ -39,23 +61,37 @@ export class Board {
     return (this.size.x + 1) * (this.size.y + 1);
   }
 
-  public print(): string {
-    let output = "";
-    let row = 0;
-
-    Vector2.fromTo(Vector2.zero(), this.size, vector => {
-      if (vector.y !== row) {
-        output += "\n";
-        row = vector.y;
-      }
-
-      output += ` ${this.getTileAt(vector).getSprite()} `;
-    });
-
-    return output;
-  }
-
   private getTileAt(vector: Vector2): AbstractTile {
     return this.getColumn(vector.y).getTileAt(vector.x);
+  }
+
+  public getColumns(): Column[] {
+    return this.columns;
+  }
+
+  public getSprite(): PIXI.Sprite {
+    return this.sprite;
+  }
+
+  public draw(): void {
+    const graphic = new PIXI.Graphics();
+    const size = AbstractRenderer.getUnitFromVector(this.getSize());
+
+    graphic.beginFill(0xff0000);
+    graphic.drawRect(0, 0, size.x, size.y);
+    graphic.endFill();
+
+    const sprite = new PIXI.Sprite(
+      application.renderer.generateTexture(
+        graphic,
+        PIXI.SCALE_MODES.LINEAR,
+        application.renderer.resolution
+      )
+    );
+
+    sprite.x = application.renderer.width / 2 - sprite.width / 2;
+    sprite.y = application.renderer.height / 2 - sprite.height / 2;
+
+    this.sprite = sprite;
   }
 }

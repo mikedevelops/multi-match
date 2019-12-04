@@ -1,7 +1,6 @@
 import { AbstractTile, TileType } from "../Tile/AbstractTile";
 import { Seed } from "./Seed";
-import { BlueTile } from "../Tile/BlueTile";
-import { RedTile } from "../Tile/RedTile";
+import { createTile } from "../Factory/TileFactory";
 
 export class TileProvider {
   private getRandomTile(): AbstractTile {
@@ -10,25 +9,19 @@ export class TileProvider {
       .filter(n => !Number.isNaN(n)) as unknown) as TileType[keyof TileType][];
     const type = types[Math.floor(Math.random() * types.length)];
 
-    // TODO: fix these types...
+    // TODO: fix these enum types
     // @ts-ignore
-    switch (type) {
-      // @ts-ignore
-      case TileType.BLUE:
-        return new BlueTile();
-      // @ts-ignore
-      case TileType.RED:
-        return new RedTile();
-    }
-
-    throw new Error(`Could not provide Tile with type ${type}`);
+    return createTile(type);
   }
 
   public generateSeed(length: number): Seed {
     const seed = new Seed();
 
     for (let i = 0; i < length; i++) {
-      seed.enqueue(this.getRandomTile());
+      const tile = this.getRandomTile();
+
+      tile.setSeedIndex(i);
+      seed.enqueue(tile);
     }
 
     return seed;

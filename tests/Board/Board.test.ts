@@ -11,7 +11,7 @@ describe("Board", () => {
 
   describe("fill", () => {
     test("Should fill the board with a seed", () => {
-      const board = new Board(new Vector2(2, 2));
+      const board = new Board(new Vector2(20, 20));
       const seed = tileProvider.generateSeed(board.getLength());
 
       board.fill(seed);
