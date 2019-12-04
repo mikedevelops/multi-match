@@ -1,14 +1,5 @@
 import { MultipleInstanceException } from "../Exceptions/MultipleInstanceException";
 import * as PIXI from "pixi.js";
+import { Vector2 } from "../Vector/Vector2";
 
-export class InputManager {
-  public static instance: PIXI.interaction.InteractionManager;
-
-  constructor(interactionManager: PIXI.interaction.InteractionManager) {
-    if (InputManager.instance !== undefined) {
-      throw new MultipleInstanceException(InputManager.name);
-    }
-
-    InputManager.instance = interactionManager;
-  }
-}
+export class InputManager {}

@@ -14,4 +14,13 @@ describe("Vector", () => {
       expect(callback.mock.calls[3][0]).toEqual(new Vector2(1, 1));
     });
   });
+
+  describe("lerp", () => {
+    test("Should lerp between 2 points", () => {
+      const a = new Vector2(1, 1);
+      const b = new Vector2(2, 2);
+
+      console.log(Vector2.lerp(a, b, 0.16));
+    });
+  });
 });

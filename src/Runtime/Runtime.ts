@@ -1,6 +1,5 @@
 import { Board } from "../Board/Board";
 import { Seed } from "../Seed/Seed";
-import { BoardRenderer } from "../Renderer/BoardRenderer";
 import { application } from "../index";
 import * as PIXI from "pixi.js";
 import { TileIdleState } from "../State/Tile/TileIdleState";
@@ -9,8 +8,6 @@ import { AbstractRenderer } from "../Renderer/AbstractRenderer";
 export class Runtime {
   private board: Board;
 
-  constructor(private boardRenderer: BoardRenderer) {}
-
   public loadBoard(board: Board, seed: Seed): void {
     this.board = board;
     this.board.fill(seed);
@@ -18,6 +15,7 @@ export class Runtime {
 
   public start(): void {
     this.board.draw();
+    this.board.updateBounds();
 
     // Draw columns and tiles
     this.board.getColumns().forEach(column => {
@@ -27,10 +25,15 @@ export class Runtime {
       columnContainer.x = AbstractRenderer.getUnit(column.getOrder());
 
       column.getTiles().forEach(tile => {
+        // A useful reference to have
+        tile.setBoard(this.board);
+
         // Draw tile
         tile.draw();
+
         // Set initial state for tiles
         tile.getStateManager().setState(new TileIdleState(tile));
+
         // Add tiles to column
         columnContainer.addChild(tile.getSprite());
       });

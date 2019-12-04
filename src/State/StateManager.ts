@@ -18,8 +18,6 @@ export class StateManager {
   }
 
   public setState(state: State): void {
-    console.log(state.getName());
-
     if (this.state !== undefined && isStateWithLeave(this.state)) {
       this.state.leave();
     }

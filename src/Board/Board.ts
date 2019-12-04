@@ -10,11 +10,21 @@ import { application } from "../index";
 export class Board {
   private columns: Column[] = [];
   private sprite: PIXI.Sprite;
+  private bounds: Vector2 = Vector2.zero();
 
   constructor(private size: Vector2) {
     for (let c = 0; c < this.size.x; c++) {
       this.columns.push(new Column(new Vector2(1, size.y), c));
     }
+  }
+
+  public updateBounds(): void {
+    const bounds = this.sprite.getBounds();
+    this.bounds = new Vector2(bounds.left, bounds.top);
+  }
+
+  public getBounds(): Vector2 {
+    return this.bounds;
   }
 
   public start(): void {
@@ -89,6 +99,7 @@ export class Board {
       )
     );
 
+    sprite.interactive = true;
     sprite.x = application.renderer.width / 2 - sprite.width / 2;
     sprite.y = application.renderer.height / 2 - sprite.height / 2;
 
