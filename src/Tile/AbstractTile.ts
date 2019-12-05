@@ -3,10 +3,14 @@ import { StateManager } from "../State/StateManager";
 import * as PIXI from "pixi.js";
 import { AbstractRenderer } from "../Renderer/AbstractRenderer";
 import { Board } from "../Board/Board";
+import { Column } from "../Column/Column";
 
 export enum TileType {
   BLUE
 }
+
+// TODO: tiles should appear to be picked up, they should shrink/grow and
+//  have a shadow
 
 export abstract class AbstractTile {
   protected position: Vector2 = Vector2.zero();
@@ -14,6 +18,8 @@ export abstract class AbstractTile {
   protected visible = false;
   protected sprite: PIXI.Sprite;
   protected board: Board;
+  protected column: Column;
+  protected linkedTile: AbstractTile | null = null;
 
   protected readonly size = new Vector2(1, 1);
 
@@ -25,6 +31,22 @@ export abstract class AbstractTile {
 
   public setBoard(board: Board): void {
     this.board = board;
+  }
+
+  public getColumn(): Column {
+    return this.column;
+  }
+
+  public setColumn(column: Column): void {
+    this.column = column;
+  }
+
+  public setLinkedTile(tile: AbstractTile): void {
+    this.linkedTile = tile;
+  }
+
+  public getLinkedTile(): AbstractTile | null {
+    return this.linkedTile;
   }
 
   public update(): void {
@@ -44,15 +66,25 @@ export abstract class AbstractTile {
     this.visible = visible;
   }
 
-  public getPosition(): Vector2 {
+  /**
+   * Returns the position of the tile on the board
+   */
+  public getBoardPosition(): Vector2 {
+    return new Vector2(this.column.getOrder(), this.position.y);
+  }
+
+  /**
+   * Returns the position of the tile in the column
+   */
+  public getColumnPosition(): Vector2 {
     return this.position;
   }
 
-  getSpritePosition(): Vector2 {
+  public getSpritePosition(): Vector2 {
     return new Vector2(this.sprite.x, this.sprite.y);
   }
 
-  setSpritePosition(position: Vector2): void {
+  public setSpritePosition(position: Vector2): void {
     this.sprite.x = position.x;
     this.sprite.y = position.y;
   }

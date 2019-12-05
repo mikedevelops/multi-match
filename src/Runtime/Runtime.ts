@@ -25,8 +25,9 @@ export class Runtime {
       columnContainer.x = AbstractRenderer.getUnit(column.getOrder());
 
       column.getTiles().forEach(tile => {
-        // A useful reference to have
+        // A useful references
         tile.setBoard(this.board);
+        tile.setColumn(column);
 
         // Draw tile
         tile.draw();

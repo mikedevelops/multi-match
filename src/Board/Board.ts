@@ -6,6 +6,7 @@ import { EmptySeedException } from "../Exceptions/EmptySeedException";
 import * as PIXI from "pixi.js";
 import { AbstractRenderer } from "../Renderer/AbstractRenderer";
 import { application } from "../index";
+import { OutOfBoardBoundsError } from "../Exceptions/OutOfBoardBoundsError";
 
 export class Board {
   private columns: Column[] = [];
@@ -58,12 +59,12 @@ export class Board {
     });
   }
 
-  private getColumn(y: number): Column {
-    if (this.columns[y] === undefined) {
-      throw new Error("Column " + y + " does not exist");
+  private getColumn(x: number): Column {
+    if (this.columns[x] === undefined) {
+      throw new OutOfBoardBoundsError();
     }
 
-    return this.columns[y];
+    return this.columns[x];
   }
 
   public getLength(): number {
@@ -71,8 +72,8 @@ export class Board {
     return (this.size.x + 1) * (this.size.y + 1);
   }
 
-  private getTileAt(vector: Vector2): AbstractTile {
-    return this.getColumn(vector.y).getTileAt(vector.x);
+  public getTileAt(vector: Vector2): AbstractTile {
+    return this.getColumn(vector.x).getTileAt(vector.y);
   }
 
   public getColumns(): Column[] {

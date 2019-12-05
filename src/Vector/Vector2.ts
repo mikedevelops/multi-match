@@ -88,4 +88,8 @@ export class Vector2 {
 
     return distance < tolerance ? start : lerped;
   }
+
+  public static invert(vector: Vector2): Vector2 {
+    return new Vector2(vector.x * -1, vector.y * -1);
+  }
 }

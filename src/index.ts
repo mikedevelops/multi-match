@@ -5,7 +5,7 @@ import { TileProvider } from "./Seed/TileProvider";
 import { Runtime } from "./Runtime/Runtime";
 
 export const BASE_UNIT = 128;
-export const DEFAULT_LERP_SPEED = 0.5;
+export const DEFAULT_LERP_SPEED = 0.15;
 
 export const getApplicationWidth = () => window.innerWidth;
 export const getApplicationHeight = () => window.innerHeight;

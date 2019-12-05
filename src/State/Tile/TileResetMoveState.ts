@@ -12,7 +12,7 @@ export class TileResetMoveState implements State {
 
   constructor(private tile: AbstractTile) {
     this.targetPosition = AbstractRenderer.getUnitFromVector(
-      tile.getPosition()
+      tile.getColumnPosition()
     );
   }
 

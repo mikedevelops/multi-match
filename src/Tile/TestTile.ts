@@ -18,7 +18,7 @@ export class TestTile extends AbstractTile {
             .getName()
         : "NULL";
     const debug = new PIXI.Text(
-      `s${this.getSeedIndex()}\n${state}`,
+      `s${this.getSeedIndex()}\n${state}\n${this.getBoardPosition().toString()}`,
       new PIXI.TextStyle({
         fontSize: "14px"
       })

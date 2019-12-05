@@ -38,6 +38,15 @@ export class TileMoveResolverState implements StateWithEnter, StateWithLeave {
     }
 
     if (!this.isValidMove()) {
+      const linkedTile = this.tile.getLinkedTile();
+
+      if (linkedTile !== null) {
+        // TODO: Another instance of a transition state outside of a state...
+        linkedTile
+          .getStateManager()
+          .setState(new TileResetMoveState(linkedTile));
+      }
+
       return new TileResetMoveState(this.tile);
     }
 

@@ -2,7 +2,7 @@ import { StateWithEnter } from "../StateWithEnter";
 import { State } from "../State";
 import { AbstractTile } from "../../Tile/AbstractTile";
 import { StateWithLeave } from "../StateWithLeave";
-import { TileMovePreviewState } from "./TileMovePreviewState";
+import { ActiveTileMovePreviewState } from "./ActiveTileMovePreviewState";
 import { Vector2 } from "../../Vector/Vector2";
 import { TileResetMoveState } from "./TileResetMoveState";
 
@@ -15,6 +15,7 @@ export class TileGrabbedState implements StateWithEnter, StateWithLeave {
   private lastPointerPositionX: number = 0;
   private pointerDeltaSum: number = 0;
   private couldMove: boolean = false;
+  private cachedZIndex: number = 0;
 
   constructor(private tile: AbstractTile) {
     this.handleReleaseBound = this.handleRelease.bind(this);
@@ -54,6 +55,8 @@ export class TileGrabbedState implements StateWithEnter, StateWithLeave {
       .getBoard()
       .getSprite()
       .removeListener("pointermove", this.handleMovePointerBound);
+
+    this.tile.getSprite().zIndex = this.cachedZIndex;
   }
 
   enter(): void {
@@ -65,6 +68,10 @@ export class TileGrabbedState implements StateWithEnter, StateWithLeave {
       .getBoard()
       .getSprite()
       .addListener("pointermove", this.handleMovePointerBound);
+
+    this.cachedZIndex = this.tile.getSprite().zIndex;
+    // TODO: do this more sensibly
+    this.tile.getSprite().zIndex = 999;
   }
 
   getName(): string {
@@ -73,7 +80,7 @@ export class TileGrabbedState implements StateWithEnter, StateWithLeave {
 
   update(): State | null {
     if (this.couldMove) {
-      return new TileMovePreviewState(
+      return new ActiveTileMovePreviewState(
         this.pointerDeltaSum > 0 ? Vector2.right() : Vector2.left(),
         this.tile
       );
