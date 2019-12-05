@@ -4,7 +4,7 @@ import { Vector2 } from "./Vector/Vector2";
 import { TileProvider } from "./Seed/TileProvider";
 import { Runtime } from "./Runtime/Runtime";
 
-export const BASE_UNIT = 128;
+export const BASE_UNIT = 80;
 export const DEFAULT_LERP_SPEED = 0.15;
 
 export const getApplicationWidth = () => window.innerWidth;
@@ -18,7 +18,7 @@ export const application = new PIXI.Application({
   height: getApplicationHeight()
 });
 
-const board = new Board(new Vector2(2, 3));
+const board = new Board(new Vector2(4, 6));
 const tileProvider = new TileProvider();
 const tileSeed = tileProvider.generateSeed(500);
 
