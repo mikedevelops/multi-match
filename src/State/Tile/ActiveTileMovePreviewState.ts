@@ -43,7 +43,7 @@ export class ActiveTileMovePreviewState
   }
 
   enter(): void {
-    window.addEventListener("mouseup", this.handleReleaseBound);
+    window.addEventListener("pointerup", this.handleReleaseBound);
 
     const board = this.tile.getBoard();
     let adjacentTile;
@@ -112,6 +112,6 @@ export class ActiveTileMovePreviewState
   }
 
   leave(): void {
-    window.removeEventListener("mouseup", this.handleReleaseBound);
+    window.removeEventListener("pointerup", this.handleReleaseBound);
   }
 }

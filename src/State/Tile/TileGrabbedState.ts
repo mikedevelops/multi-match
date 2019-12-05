@@ -50,7 +50,7 @@ export class TileGrabbedState implements StateWithEnter, StateWithLeave {
 
   leave(): void {
     // Cleanup listeners
-    window.removeEventListener("mouseup", this.handleReleaseBound);
+    window.removeEventListener("pointerup", this.handleReleaseBound);
     this.tile
       .getBoard()
       .getSprite()
@@ -62,7 +62,7 @@ export class TileGrabbedState implements StateWithEnter, StateWithLeave {
   enter(): void {
     // Detect pointerup anywhere on the page here as we may have moved the
     // pointer outside of the range of movement for the tile
-    window.addEventListener("mouseup", this.handleReleaseBound);
+    window.addEventListener("pointerup", this.handleReleaseBound);
 
     this.tile
       .getBoard()
