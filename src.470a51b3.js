@@ -20274,10 +20274,10 @@ parcelRequire = (function(e, r, t, n) {
           }
           return (
             (t.prototype.enter = function() {
-              window.addEventListener("mouseup", this.handleReleaseBound);
+              window.addEventListener("pointerup", this.handleReleaseBound);
             }),
             (t.prototype.leave = function() {
-              window.removeEventListener("mouseup", this.handleReleaseBound);
+              window.removeEventListener("pointerup", this.handleReleaseBound);
             }),
             (t.prototype.handleRelease = function() {
               this.released = !0;
@@ -20417,7 +20417,7 @@ parcelRequire = (function(e, r, t, n) {
               this.released = !0;
             }),
             (a.prototype.enter = function() {
-              window.addEventListener("mouseup", this.handleReleaseBound);
+              window.addEventListener("pointerup", this.handleReleaseBound);
               var t,
                 i = this.tile.getBoard();
               try {
@@ -20461,7 +20461,7 @@ parcelRequire = (function(e, r, t, n) {
                 : (this.tile.setSpritePosition(n), null);
             }),
             (a.prototype.leave = function() {
-              window.removeEventListener("mouseup", this.handleReleaseBound);
+              window.removeEventListener("pointerup", this.handleReleaseBound);
             }),
             a
           );
@@ -20514,7 +20514,7 @@ parcelRequire = (function(e, r, t, n) {
                 : (this.lastPointerPositionX = t.x);
             }),
             (e.prototype.leave = function() {
-              window.removeEventListener("mouseup", this.handleReleaseBound),
+              window.removeEventListener("pointerup", this.handleReleaseBound),
                 this.tile
                   .getBoard()
                   .getSprite()
@@ -20522,7 +20522,7 @@ parcelRequire = (function(e, r, t, n) {
                 (this.tile.getSprite().zIndex = this.cachedZIndex);
             }),
             (e.prototype.enter = function() {
-              window.addEventListener("mouseup", this.handleReleaseBound),
+              window.addEventListener("pointerup", this.handleReleaseBound),
                 this.tile
                   .getBoard()
                   .getSprite()
@@ -21262,4 +21262,4 @@ parcelRequire = (function(e, r, t, n) {
   ["QCba"],
   null
 );
-//# sourceMappingURL=/src.6e788a12.js.map
+//# sourceMappingURL=/src.470a51b3.js.map
