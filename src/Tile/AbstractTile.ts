@@ -6,7 +6,9 @@ import { Board } from "../Board/Board";
 import { Column } from "../Column/Column";
 
 export enum TileType {
-  BLUE
+  Nigiri,
+  Makizushi,
+  Gunkan
 }
 
 // TODO: tiles should appear to be picked up, they should shrink/grow and
@@ -115,16 +117,21 @@ export abstract class AbstractTile {
     const position = AbstractRenderer.getUnitFromVector(this.position);
 
     sprite.interactive = true;
-    sprite.width = size.x;
-    sprite.height = size.y;
-    sprite.x = position.x;
-    sprite.y = position.y;
+
+    // TODO: figure out padding/margin here. We cannot simply add the values
+    //  here as when they positions are reset, they will revert back to the
+    //  "true" column position. Will likely need another position property
+    //  like worldPosition or something
+    sprite.width = size.x - 6;
+    sprite.height = size.y - 6;
+    sprite.x = position.x + 3;
+    sprite.y = position.y + 3;
 
     this.sprite = sprite;
   }
 
   private updateTexture(): void {
-    this.sprite.texture = this.getTexture();
+    // this.sprite.texture = this.getTexture();
   }
 
   public abstract getType(): TileType;

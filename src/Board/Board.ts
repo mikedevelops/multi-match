@@ -88,7 +88,7 @@ export class Board {
     const graphic = new PIXI.Graphics();
     const size = AbstractRenderer.getUnitFromVector(this.getSize());
 
-    graphic.beginFill(0xff0000);
+    graphic.beginFill(0x422433);
     graphic.drawRect(0, 0, size.x, size.y);
     graphic.endFill();
 
