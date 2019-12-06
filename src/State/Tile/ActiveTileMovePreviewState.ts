@@ -46,17 +46,11 @@ export class ActiveTileMovePreviewState
     window.addEventListener("pointerup", this.handleReleaseBound);
 
     const board = this.tile.getBoard();
-    let adjacentTile;
+    const adjacentTile = board.getTileAt(
+      Vector2.add(this.tile.getBoardPosition(), this.direction)
+    );
 
-    try {
-      adjacentTile = board.getTileAt(
-        Vector2.add(this.tile.getBoardPosition(), this.direction)
-      );
-    } catch (error) {
-      if (!(error instanceof OutOfBoardBoundsError)) {
-        throw error;
-      }
-
+    if (adjacentTile === null) {
       return;
     }
 

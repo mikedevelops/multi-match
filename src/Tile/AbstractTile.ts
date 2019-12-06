@@ -131,7 +131,17 @@ export abstract class AbstractTile {
   }
 
   private updateTexture(): void {
-    // this.sprite.texture = this.getTexture();
+    // DEBUG texture
+    // const text = new PIXI.Text(
+    //   this.getBoardPosition().toString(),
+    //   new PIXI.TextStyle({
+    //     fill: 0xffffff,
+    //     fontSize: "12px",
+    //     fontFamily: "monospace"
+    //   })
+    // );
+    //
+    // this.sprite.addChild(text);
   }
 
   public abstract getType(): TileType;

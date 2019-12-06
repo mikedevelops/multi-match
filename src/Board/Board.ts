@@ -6,12 +6,14 @@ import { EmptySeedException } from "../Exceptions/EmptySeedException";
 import * as PIXI from "pixi.js";
 import { AbstractRenderer } from "../Renderer/AbstractRenderer";
 import { application } from "../index";
-import { OutOfBoardBoundsError } from "../Exceptions/OutOfBoardBoundsError";
+import { MatchSolver } from "../Match/MatchSolver";
 
 export class Board {
   private columns: Column[] = [];
   private sprite: PIXI.Sprite;
   private bounds: Vector2 = Vector2.zero();
+  private matchSolver: MatchSolver = new MatchSolver();
+  private matching: boolean;
 
   constructor(private size: Vector2) {
     for (let c = 0; c < this.size.x; c++) {
@@ -59,9 +61,19 @@ export class Board {
     });
   }
 
-  private getColumn(x: number): Column {
+  public async match(tile: AbstractTile): Promise<void> {
+    this.matching = true;
+    await this.matchSolver.solve(this, tile);
+    this.matching = false;
+  }
+
+  public isMatching(): boolean {
+    return this.matching;
+  }
+
+  private getColumn(x: number): Column | null {
     if (this.columns[x] === undefined) {
-      throw new OutOfBoardBoundsError();
+      return null;
     }
 
     return this.columns[x];
@@ -72,8 +84,28 @@ export class Board {
     return (this.size.x + 1) * (this.size.y + 1);
   }
 
-  public getTileAt(vector: Vector2): AbstractTile {
-    return this.getColumn(vector.x).getTileAt(vector.y);
+  public getTileAt(vector: Vector2): AbstractTile | null {
+    const column = this.getColumn(vector.x);
+
+    if (column === null) {
+      return null;
+    }
+
+    return column.getTileAt(vector.y);
+  }
+
+  public getAdjacentTile(
+    tile: AbstractTile,
+    direction: Vector2
+  ): AbstractTile | null {
+    const tilePosition = tile.getBoardPosition();
+    const column = this.getColumn(tilePosition.x + direction.x);
+
+    if (column === null) {
+      return null;
+    }
+
+    return column.getTileAt(tilePosition.y);
   }
 
   public getColumns(): Column[] {

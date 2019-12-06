@@ -14,8 +14,29 @@ export class TileProvider {
     return createTile(type);
   }
 
-  public generateSeed(length: number): Seed {
+  private createTileFromSeedId(id: string): AbstractTile {
+    switch (id) {
+      case "G":
+        return createTile(TileType.Gunkan);
+      case "M":
+        return createTile(TileType.Makizushi);
+      case "N":
+        return createTile(TileType.Nigiri);
+      default:
+        throw new Error(`Could not get tile from seed ID ${id}`);
+    }
+  }
+
+  public generateSeed(length: number, seedString: string | null = null): Seed {
     const seed = new Seed();
+
+    if (seedString !== null) {
+      seedString.split("").forEach(tileSeedId => {
+        seed.enqueue(this.createTileFromSeedId(tileSeedId));
+      });
+
+      return seed;
+    }
 
     for (let i = 0; i < length; i++) {
       const tile = this.getRandomTile();

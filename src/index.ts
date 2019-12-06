@@ -19,7 +19,7 @@ export const application = new PIXI.Application({
   antialias: false
 });
 
-const board = new Board(new Vector2(5, 10));
+const board = new Board(new Vector2(6, 10));
 const tileProvider = new TileProvider();
 const tileSeed = tileProvider.generateSeed(500);
 

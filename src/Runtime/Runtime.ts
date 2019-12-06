@@ -4,6 +4,7 @@ import { application } from "../index";
 import * as PIXI from "pixi.js";
 import { TileIdleState } from "../State/Tile/TileIdleState";
 import { AbstractRenderer } from "../Renderer/AbstractRenderer";
+import { TileMoveResolverState } from "../State/Tile/TileMoveResolverState";
 
 export class Runtime {
   private board: Board;
@@ -33,7 +34,9 @@ export class Runtime {
         tile.draw();
 
         // Set initial state for tiles
-        tile.getStateManager().setState(new TileIdleState(tile));
+        // tile.getStateManager().setState(new TileIdleState(tile));
+        // TODO: Debug... all tiles are in a resolve state initially
+        tile.getStateManager().setState(new TileMoveResolverState(tile, false));
 
         // Add tiles to column
         columnContainer.addChild(tile.getSprite());
