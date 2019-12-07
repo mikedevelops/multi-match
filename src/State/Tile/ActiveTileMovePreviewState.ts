@@ -6,7 +6,6 @@ import { application, DEFAULT_LERP_SPEED } from "../../index";
 import { TileMoveResolverState } from "./TileMoveResolverState";
 import { StateWithEnter } from "../StateWithEnter";
 import { LinkedTileMovePreviewState } from "./LinkedTileMovePreviewState";
-import { OutOfBoardBoundsError } from "../../Exceptions/OutOfBoardBoundsError";
 import { StateWithLeave } from "../StateWithLeave";
 import { TileResetMoveState } from "./TileResetMoveState";
 
@@ -50,10 +49,15 @@ export class ActiveTileMovePreviewState
       Vector2.add(this.tile.getBoardPosition(), this.direction)
     );
 
+    this.tile.setBoardPosition(
+      Vector2.add(this.tile.getBoardPosition(), this.direction)
+    );
+
     if (adjacentTile === null) {
       return;
     }
 
+    this.tile.getBoard().switchTiles(this.tile, adjacentTile);
     this.tile.setLinkedTile(adjacentTile);
 
     // TODO: I don't know how I feel about this... it breaks the rule of a
@@ -78,14 +82,6 @@ export class ActiveTileMovePreviewState
 
   update(): State | null {
     if (this.released) {
-      const linkedTile = this.tile.getLinkedTile();
-
-      if (linkedTile !== null) {
-        linkedTile
-          .getStateManager()
-          .setState(new TileResetMoveState(linkedTile));
-      }
-
       return new TileResetMoveState(this.tile);
     }
 

@@ -17,7 +17,11 @@ export class LinkedTileMovePreviewState implements StateWithEnter {
     );
   }
 
-  enter(): void {}
+  enter(): void {
+    this.tile.setBoardPosition(
+      Vector2.add(this.tile.getBoardPosition(), this.direction)
+    );
+  }
 
   getName(): string {
     return S_LINKED_TILE_MOVE_PREVIEW;

@@ -6,6 +6,15 @@ import * as PIXI from "pixi.js";
 
 export class StateManager {
   private state: State;
+  private id: string;
+
+  public setId(id: string): void {
+    this.id = id;
+  }
+
+  public getId(): string {
+    return this.id;
+  }
 
   public update(): void {
     const next = this.state.update();
@@ -18,6 +27,7 @@ export class StateManager {
   }
 
   public setState(state: State): void {
+    console.log(this.id, state.getName());
     if (this.state !== undefined && isStateWithLeave(this.state)) {
       this.state.leave();
     }

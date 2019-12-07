@@ -4,6 +4,8 @@ import * as PIXI from "pixi.js";
 import { AbstractRenderer } from "../Renderer/AbstractRenderer";
 import { Board } from "../Board/Board";
 import { Column } from "../Column/Column";
+import { RUNTIME_MODE, tileDebugService } from "../index";
+import { RuntimeMode } from "../Runtime/Runtime";
 
 export enum TileType {
   Nigiri,
@@ -16,14 +18,19 @@ export enum TileType {
 
 export abstract class AbstractTile {
   protected position: Vector2 = Vector2.zero();
+  protected boardPosition: Vector2;
   protected seedIndex: number = -1;
-  protected visible = false;
   protected sprite: PIXI.Sprite;
   protected board: Board;
-  protected column: Column;
+  protected column: Column | null;
   protected linkedTile: AbstractTile | null = null;
-
   protected readonly size = new Vector2(1, 1);
+
+  /**
+   * The "resting" tile position in the current board, this should change if
+   * the board configuration changes
+   */
+  protected homePosition: Vector2;
 
   constructor(protected stateManager: StateManager) {}
 
@@ -33,10 +40,6 @@ export abstract class AbstractTile {
 
   public setBoard(board: Board): void {
     this.board = board;
-  }
-
-  public getColumn(): Column {
-    return this.column;
   }
 
   public setColumn(column: Column): void {
@@ -60,19 +63,23 @@ export abstract class AbstractTile {
     return this.stateManager;
   }
 
-  public isVisible(): boolean {
-    return this.visible;
-  }
-
-  public setVisible(visible: boolean): void {
-    this.visible = visible;
-  }
-
   /**
    * Returns the position of the tile on the board
    */
   public getBoardPosition(): Vector2 {
-    return new Vector2(this.column.getOrder(), this.position.y);
+    return this.boardPosition;
+  }
+
+  public setBoardPosition(position: Vector2): void {
+    this.boardPosition = position;
+  }
+
+  public setHomePosition(position: Vector2): void {
+    this.homePosition = position;
+  }
+
+  public getHomePosition(): Vector2 {
+    return this.homePosition;
   }
 
   /**
@@ -97,10 +104,6 @@ export abstract class AbstractTile {
 
   public setSeedIndex(seedIndex: number): void {
     this.seedIndex = seedIndex;
-  }
-
-  public getSize(): Vector2 {
-    return this.size;
   }
 
   public getSeedIndex(): number {
@@ -131,17 +134,13 @@ export abstract class AbstractTile {
   }
 
   private updateTexture(): void {
-    // DEBUG texture
-    // const text = new PIXI.Text(
-    //   this.getBoardPosition().toString(),
-    //   new PIXI.TextStyle({
-    //     fill: 0xffffff,
-    //     fontSize: "12px",
-    //     fontFamily: "monospace"
-    //   })
-    // );
-    //
-    // this.sprite.addChild(text);
+    if (RUNTIME_MODE === RuntimeMode.Debug) {
+      tileDebugService.draw(this);
+    }
+  }
+
+  public getColumn(): Column {
+    return this.column;
   }
 
   public abstract getType(): TileType;

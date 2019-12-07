@@ -47,4 +47,26 @@ export class Column {
     tile.setPosition(new Vector2(0, this.size.y - this.tiles.length - 1));
     this.tiles.push(tile);
   }
+
+  public addTileAt(tile: AbstractTile, index: number): void {
+    if (index >= this.tiles.length) {
+      throw new Error("Cannot insert a tile at an index that does not exist!");
+    }
+
+    this.tiles[index] = tile;
+    tile.setColumn(this);
+  }
+
+  public removeTile(tile: AbstractTile): number {
+    const index = this.tiles.indexOf(tile);
+
+    if (index === -1) {
+      throw new Error(`Cannot remove a tile that is not in the column!`);
+    }
+
+    this.tiles[index] = null;
+    tile.setColumn(null);
+
+    return index;
+  }
 }

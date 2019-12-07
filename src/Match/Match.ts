@@ -6,6 +6,11 @@ export class Match {
   constructor(private source: AbstractTile) {}
 
   public addTile(tile: AbstractTile): void {
+    // TODO: Feels like I'm handling a bug here instead of fixing it...
+    if (tile === this.source) {
+      return;
+    }
+
     this.tiles.push(tile);
   }
 

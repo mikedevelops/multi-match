@@ -1,10 +1,17 @@
 import { Board } from "../Board/Board";
 import { Seed } from "../Seed/Seed";
-import { application } from "../index";
+import { application, tileDebugService } from "../index";
 import * as PIXI from "pixi.js";
-import { TileIdleState } from "../State/Tile/TileIdleState";
 import { AbstractRenderer } from "../Renderer/AbstractRenderer";
 import { TileMoveResolverState } from "../State/Tile/TileMoveResolverState";
+import { TileIdleState } from "../State/Tile/TileIdleState";
+import { Vector2 } from "../Vector/Vector2";
+import { TileType } from "../Tile/AbstractTile";
+
+export enum RuntimeMode {
+  Debug,
+  Production
+}
 
 export class Runtime {
   private board: Board;
@@ -25,18 +32,30 @@ export class Runtime {
       // Position column
       columnContainer.x = AbstractRenderer.getUnit(column.getOrder());
 
-      column.getTiles().forEach(tile => {
-        // A useful references
+      column.getTiles().forEach((tile, index) => {
+        // useful references
         tile.setBoard(this.board);
         tile.setColumn(column);
+
+        // Tile's position relative to the board grid
+        tile.setBoardPosition(new Vector2(column.getOrder(), index));
+
+        // Tile's rested home position, a reference to a position that we can
+        // reset to if the board position has temporarily changed
+        tile.setHomePosition(tile.getBoardPosition());
 
         // Draw tile
         tile.draw();
 
+        // Give the state manager an ID for debugging
+        tile
+          .getStateManager()
+          .setId(
+            `${tile.getSeedIndex().toString()} ${TileType[tile.getType()]}`
+          );
+
         // Set initial state for tiles
-        // tile.getStateManager().setState(new TileIdleState(tile));
-        // TODO: Debug... all tiles are in a resolve state initially
-        tile.getStateManager().setState(new TileMoveResolverState(tile, false));
+        tile.getStateManager().setState(new TileIdleState(tile));
 
         // Add tiles to column
         columnContainer.addChild(tile.getSprite());

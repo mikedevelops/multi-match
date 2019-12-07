@@ -31,14 +31,21 @@ export class TileProvider {
     const seed = new Seed();
 
     if (seedString !== null) {
-      seedString.split("").forEach(tileSeedId => {
-        seed.enqueue(this.createTileFromSeedId(tileSeedId));
-      });
+      seedString.split("").forEach((tileSeedId, index) => {
+        const tile = this.createTileFromSeedId(tileSeedId);
 
+        tile.setSeedIndex(index);
+        seed.enqueue(tile);
+      });
+    }
+
+    if (seed.getCount() >= length) {
       return seed;
     }
 
-    for (let i = 0; i < length; i++) {
+    const remaining = length - seed.getCount();
+
+    for (let i = 0; i < remaining; i++) {
       const tile = this.getRandomTile();
 
       tile.setSeedIndex(i);

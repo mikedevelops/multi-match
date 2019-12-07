@@ -1,11 +1,9 @@
 import { State } from "../State";
 import { AbstractTile } from "../../Tile/AbstractTile";
 import { StateWithEnter } from "../StateWithEnter";
-import { TileResetMoveState } from "./TileResetMoveState";
 import { StateWithLeave } from "../StateWithLeave";
-import { Vector2 } from "../../Vector/Vector2";
-import { Match } from "../../Match/Match";
-import { TileIdleState } from "./TileIdleState";
+import { WaitingForReconciliationState } from "./WaitingForReconciliationState";
+import { TileReconcilingState } from "./TileReconcilingState";
 
 export const S_TILE_MOVE_RESOLVE = "S_TILE_MOVE_RESOLVE";
 
@@ -36,9 +34,8 @@ export class TileMoveResolverState implements StateWithEnter, StateWithLeave {
     return S_TILE_MOVE_RESOLVE;
   }
 
-  private isValid(): boolean {
-    // TODO: determine this somehow
-    return false;
+  private canReconcile(): boolean {
+    return this.tile.getBoard().canReconcile();
   }
 
   update(): State | null {
@@ -46,33 +43,10 @@ export class TileMoveResolverState implements StateWithEnter, StateWithLeave {
       return null;
     }
 
-    if (!this.isValid()) {
-      const linkedTile = this.tile.getLinkedTile();
-
-      if (linkedTile !== null) {
-        // TODO: Another instance of a transition state outside of a state...
-        linkedTile
-          .getStateManager()
-          .setState(new TileResetMoveState(linkedTile));
-      }
-
-      return new TileResetMoveState(this.tile);
+    if (!this.canReconcile()) {
+      return new WaitingForReconciliationState(this.tile);
     }
 
-    return null;
-  }
-
-  private buildMatch(tile: AbstractTile, match: Match): Match {
-    const board = tile.getBoard();
-
-    // left
-    const left = board.getAdjacentTile(tile, Vector2.left());
-
-    if (left !== null && left.getType() === tile.getType()) {
-      match.addTile(left);
-      return this.buildMatch(left, match);
-    }
-
-    return match;
+    return new TileReconcilingState(this.tile);
   }
 }

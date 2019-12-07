@@ -17,4 +17,8 @@ export class Seed {
   public enqueue(tile: AbstractTile): void {
     this.tiles.push(tile);
   }
+
+  public getCount(): number {
+    return this.tiles.length;
+  }
 }

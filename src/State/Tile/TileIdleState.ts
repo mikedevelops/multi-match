@@ -23,6 +23,9 @@ export class TileIdleState implements StateWithEnter {
   }
 
   enter(): void {
+    // Remove any tile links that may have been established
+    this.tile.setLinkedTile(null);
+
     this.tile.getSprite().addListener("pointerdown", () => {
       this.grabbed = true;
     });
