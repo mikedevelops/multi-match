@@ -37,7 +37,7 @@ export class Runtime {
       throw new Error("no board");
     }
 
-    // Half the FPS in debug mode to make sure the debug service 
+    // Half the FPS in debug mode to make sure the debug service
     // doesn't completely trash the runtime!
     if (RUNTIME_MODE === RuntimeMode.Debug && this.tick % 2 === 0) {
       requestAnimationFrame(this.update.bind(this));
@@ -53,4 +53,3 @@ export class Runtime {
     requestAnimationFrame(this.update.bind(this));
   }
 }
-

@@ -38,7 +38,7 @@ export class TileProvider {
         .replace(/\s/g, "")
         .split("")
         .reverse()
-        .forEach((tileSeedId) => {
+        .forEach(tileSeedId => {
           const tile = this.createTileFromSeedId(tileSeedId);
 
           tile.seedIndex = seedIndex;

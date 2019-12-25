@@ -17,7 +17,5 @@ export class TileIdleState implements StateWithEnter {
     return null;
   }
 
-  enter(): void {
-
-  }
+  enter(): void {}
 }

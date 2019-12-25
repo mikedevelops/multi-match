@@ -16,7 +16,7 @@ export class BoardDebugService {
     this.sync();
 
     this.boardState = new PIXI.Text(
-      this.board.stateManager.getState().getName(), 
+      this.board.stateManager.getState().getName(),
       new PIXI.TextStyle({ fill: 0x00ff00 })
     );
     this.boardState.x -= AbstractRenderer.getUnit(1);
@@ -30,7 +30,10 @@ export class BoardDebugService {
     this.board.sprite.removeChild(this.container);
 
     this.board.forEachTile((tile, position) => {
-      const text = new PIXI.Text("", new PIXI.TextStyle({ fill: 0x00ff00, fontSize: "14px" }));
+      const text = new PIXI.Text(
+        "",
+        new PIXI.TextStyle({ fill: 0x00ff00, fontSize: "14px" })
+      );
       const textPosition = position.toWorldUnit();
 
       this.print(tile, position, text);
@@ -48,7 +51,11 @@ export class BoardDebugService {
     this.boardState.text = this.board.stateManager.getState().getName();
   }
 
-  public print(tile: AbstractTile | null, position: Vector2, text: PIXI.Text): void {
+  public print(
+    tile: AbstractTile | null,
+    position: Vector2,
+    text: PIXI.Text
+  ): void {
     let info = "";
 
     if (tile === null) {

@@ -34,4 +34,3 @@ export class MatchGroup {
     return match;
   }
 }
-

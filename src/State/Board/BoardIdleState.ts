@@ -11,12 +11,14 @@ import { RuntimeMode } from "../../Runtime/Runtime";
 export const S_BOARD_IDLE = "S_BOARD_IDLE";
 
 export class BoardIdleState implements StateWithEnter, StateWithLeave {
-  private readonly boundSwitchTile: (ev: PIXI.interaction.InteractionEvent) => void;
+  private readonly boundSwitchTile: (
+    ev: PIXI.interaction.InteractionEvent
+  ) => void;
   private readonly boundGrab: (ev: PIXI.interaction.InteractionEvent) => void;
   private grabbedTile: AbstractTile | null = null;
 
   constructor(private board: Board) {
-    this.boundGrab = this.grab.bind(this); 
+    this.boundGrab = this.grab.bind(this);
     this.boundSwitchTile = this.switchTile.bind(this);
   }
 
@@ -68,7 +70,7 @@ export class BoardIdleState implements StateWithEnter, StateWithLeave {
     if (this.grabbedTile !== null) {
       return new SwitchTileState(this.grabbedTile);
     }
-    
+
     return null;
   }
 }

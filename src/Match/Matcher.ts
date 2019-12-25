@@ -8,7 +8,7 @@ export class Matcher {
   private branches: AbstractTile[] = [];
 
   public solve(source: AbstractTile): Match {
-    // TODO: Retry the "branch" approach, each tile spawns n branches (that we make sure have not already had a branch 
+    // TODO: Retry the "branch" approach, each tile spawns n branches (that we make sure have not already had a branch
     // starting on this tile and in this direction), then walk a branch and remove. Make sure we verify that a branch
     // is a valid "match" _before_ we spawn new branches
     const match = new Match(source);
@@ -31,12 +31,14 @@ export class Matcher {
     down(match, source);
   }
 
-  private walkInDirection(direction: Vector2): (match: Match, tile: AbstractTile) => Match {
+  private walkInDirection(
+    direction: Vector2
+  ): (match: Match, tile: AbstractTile) => Match {
     return (match: Match, tile: AbstractTile): Match => {
       const tempMatch = new Match(tile);
       const group = [];
 
-      while((tile = this.walk(tile, direction)) !== null) {
+      while ((tile = this.walk(tile, direction)) !== null) {
         tempMatch.addTile(tile);
       }
 
@@ -50,7 +52,7 @@ export class Matcher {
       match.merge(tempMatch);
 
       return match;
-    }
+    };
   }
 
   private walk(tile: AbstractTile, direction: Vector2): AbstractTile | null {

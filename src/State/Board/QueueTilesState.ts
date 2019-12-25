@@ -22,7 +22,7 @@ export class QueueTilesState implements StateWithEnter {
     for (const start of matchedTiles) {
       const group = walker.walkAllUpwards(start);
 
-      // Update the positions of tiles that need to reposition, then we 
+      // Update the positions of tiles that need to reposition, then we
       // add them to a queue of tiles we'll move in the update loop
       for (const tile of group.getTiles()) {
         tile.board.setTilePosition(tile, walker.walkToRestingPosition(tile));

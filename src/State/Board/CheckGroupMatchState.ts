@@ -40,4 +40,3 @@ export class CheckGroupMatchState implements StateWithEnter {
     return new BoardIdleState(this.board);
   }
 }
-

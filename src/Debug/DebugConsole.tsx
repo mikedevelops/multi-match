@@ -25,12 +25,11 @@ class DebugConsole extends React.Component {
     this.cmd.current.value = "";
   }
 
-
   render() {
     return (
       <div className="debug-console">
         <form onSubmit={this.handleSubmit.bind(this)}>
-          <input name="cmd" ref={this.cmd}/>
+          <input name="cmd" ref={this.cmd} />
         </form>
       </div>
     );
@@ -38,7 +37,6 @@ class DebugConsole extends React.Component {
 }
 
 ReactDOM.render(
-  <DebugConsole/>,
+  <DebugConsole />,
   document.getElementById("debug_console_root")
 );
-

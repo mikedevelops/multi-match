@@ -10,7 +10,7 @@ import { TileIdleState } from "../State/Tile/TileIdleState";
 export enum TileType {
   Nigiri,
   Makizushi,
-  Gunkan,
+  Gunkan
 }
 
 // TODO: tiles should appear to be picked up, they should shrink/grow and
@@ -34,7 +34,7 @@ export abstract class AbstractTile {
 
   constructor(public stateManager: StateManager) {}
 
-  public setName(): void  {
+  public setName(): void {
     this.name = `${this.seedIndex}_${TileType[this.getType()]}`;
   }
 
@@ -61,16 +61,15 @@ export abstract class AbstractTile {
     this.sprite.y = position.y;
   }
 
-  private updateTexture(): void {
-  }
-    
+  private updateTexture(): void {}
+
   public moveTile(tile: AbstractTile = this, target: Vector2): boolean {
     // TODO: this could be shortenned by ensuring the lerpUntil function
     // cannot overshoot the target vector
     const spritePosition = Vector2.fromInterface(tile.sprite);
     const nextPosition = Vector2.lerpUntil(
       spritePosition,
-      target, 
+      target,
       application.ticker.deltaTime * DEFAULT_LERP_SPEED
     );
 
@@ -90,4 +89,3 @@ export abstract class AbstractTile {
   public abstract getType(): TileType;
   public abstract getTexture(): PIXI.RenderTexture;
 }
-

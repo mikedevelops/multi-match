@@ -15,4 +15,3 @@ export class TileGroup {
     return this.tiles.values();
   }
 }
-

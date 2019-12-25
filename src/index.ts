@@ -27,7 +27,7 @@ export const RUNTIME_MODE: RuntimeMode = RuntimeMode.Production;
 const boardStateManager = new StateManager();
 const board = new Board(new Vector2(8, 12), boardStateManager);
 const tileProvider = new TileProvider();
-const tileSeed = tileProvider.generateSeed(10000); 
+const tileSeed = tileProvider.generateSeed(10000);
 
 // DEBUG
 (window as any).board = board;
@@ -52,7 +52,7 @@ loader.load(() => {
   runtime.start();
 });
 
-window.addEventListener('contextmenu', e => e.preventDefault());
+window.addEventListener("contextmenu", e => e.preventDefault());
 
 // import the debugger module once the runtime is setup
 // import "./Debug/DebugConsole";

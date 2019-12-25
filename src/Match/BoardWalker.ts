@@ -39,7 +39,7 @@ export class BoardWalker {
 
       const branch = this.branches[0];
       const branchMatch = branch.walk();
-      
+
       this.branches.shift();
 
       if (!branchMatch.isValid()) continue;
@@ -73,7 +73,7 @@ export class BoardWalker {
     if (!start.reconciled) {
       group.addUniqueTile(start);
     }
-    
+
     while (position.y !== 0) {
       const nextPosition = Vector2.add(position, Vector2.up());
       const next = board.getTileAt(nextPosition);
@@ -116,7 +116,7 @@ export class BoardWalker {
     let position = new Vector2(start.position.x, 0);
     let tile = start;
 
-    while(true) {
+    while (true) {
       position = Vector2.add(position, Vector2.up());
 
       const nextTile = board.getTileAt(position, board.queue);

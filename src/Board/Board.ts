@@ -19,7 +19,7 @@ export class Board {
   private seed: Seed;
 
   // TODO: might be better to have a system where these could be consolidated
-  
+
   // Tiles in the grid indexed by serialised position
   public grid: Map<string, AbstractTile | null> = new Map();
   // Tiles in the grid indexed by the sprite name
@@ -44,7 +44,7 @@ export class Board {
   public start(): void {
     this.sprite = this.createSprite();
     this.draw();
-    this.forEachTile(this.bootstrapTile.bind(this)); 
+    this.forEachTile(this.bootstrapTile.bind(this));
 
     this.updateBounds();
     this.stateManager.setState(new CheckGroupMatchState(this, this.getTiles()));
@@ -142,14 +142,22 @@ export class Board {
     return this.tiles.get(name);
   }
 
-  public getTileAt(position: Vector2, collection: Map<string, AbstractTile> = this.grid): AbstractTile | null {
+  public getTileAt(
+    position: Vector2,
+    collection: Map<string, AbstractTile> = this.grid
+  ): AbstractTile | null {
     if (!collection.has(position.toString())) return null;
 
     return collection.get(position.toString());
   }
 
   public isInBounds(position: Vector2): boolean {
-    return position.x >= 0 && position.y >= 0 && position.x < this.size.x && position.y < this.size.y;
+    return (
+      position.x >= 0 &&
+      position.y >= 0 &&
+      position.x < this.size.x &&
+      position.y < this.size.y
+    );
   }
 
   public getMatch(tile: AbstractTile, direction: Vector2): Match {
@@ -158,7 +166,10 @@ export class Board {
     let count = 1;
 
     while (neighbour !== null && neighbour.getType() === tile.getType()) {
-      const position = Vector2.subtract(tile.position, Vector2.multiplyInt(direction, count));
+      const position = Vector2.subtract(
+        tile.position,
+        Vector2.multiplyInt(direction, count)
+      );
 
       if (!this.isInBounds(position)) {
         break;
@@ -177,7 +188,7 @@ export class Board {
       match.getFullMatch().forEach(tile => {
         tile.sprite.tint = 0xff0000;
       });
-      
+
       setTimeout(() => {
         match.getFullMatch().forEach(tile => {
           this.sprite.removeChild(tile.sprite);
@@ -191,7 +202,10 @@ export class Board {
     });
   }
 
-  public forEachTile(cb: (tile: AbstractTile | null, position: Vector2) => void, includeNull = false): void {
+  public forEachTile(
+    cb: (tile: AbstractTile | null, position: Vector2) => void,
+    includeNull = false
+  ): void {
     for (const [position, tile] of this.grid.entries()) {
       if (tile === null && !includeNull) continue;
 
@@ -209,7 +223,11 @@ export class Board {
 
     if (targetPositionTile !== null && targetPositionTile !== undefined) {
       throw new Error(
-        `Cannot move (${tile.position.toString()}) tile "${tile.name}" because the space (${position.toString()}) is occupied by "${targetPositionTile.name}"`
+        `Cannot move (${tile.position.toString()}) tile "${
+          tile.name
+        }" because the space (${position.toString()}) is occupied by "${
+          targetPositionTile.name
+        }"`
       );
     }
 
@@ -251,7 +269,7 @@ export class Board {
 
     for (const tile of match.getFullMatch()) {
       const seedTile = this.seed.dequeue();
-      const queuePosition = walker.walkTileQueue(tile);  
+      const queuePosition = walker.walkTileQueue(tile);
 
       this.bootstrapTile(seedTile);
 
@@ -286,4 +304,3 @@ export class Board {
     this.sprite.removeChild(tile.sprite);
   }
 }
-

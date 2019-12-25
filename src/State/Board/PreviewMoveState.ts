@@ -18,7 +18,7 @@ export class PreviewMoveState implements StateWithEnter {
   private released = false;
 
   constructor(private tile: AbstractTile, private direction: Vector2) {
-    this.boundRelease = this.handleRelease.bind(this); 
+    this.boundRelease = this.handleRelease.bind(this);
     this.targetPosition = Vector2.add(
       AbstractRenderer.getUnitFromVector(tile.position),
       AbstractRenderer.getUnitFromVector(direction)
@@ -57,16 +57,16 @@ export class PreviewMoveState implements StateWithEnter {
 
   update(): State | null {
     const remainingDistance = Vector2.distance(
-      Vector2.fromInterface(this.tile.sprite.position),  
+      Vector2.fromInterface(this.tile.sprite.position),
       this.tile.position.toWorldUnit()
     );
-    
+
     if (remainingDistance > AbstractRenderer.getUnit(1) && this.released) {
       return new ResetTileState(this.tile);
     }
 
     const primaryTileMoveComplete = this.tile.moveTile(
-      this.tile, 
+      this.tile,
       this.tile.position.toWorldUnit()
     );
 
@@ -76,7 +76,7 @@ export class PreviewMoveState implements StateWithEnter {
     }
 
     const linkedTileMoveComplete = this.tile.moveTile(
-      this.tile.linkedTile, 
+      this.tile.linkedTile,
       AbstractRenderer.getUnitFromVector(this.tile.linkedTile.position)
     );
 
@@ -87,4 +87,3 @@ export class PreviewMoveState implements StateWithEnter {
     return null;
   }
 }
-

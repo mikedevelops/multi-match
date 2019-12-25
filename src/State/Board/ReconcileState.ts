@@ -12,7 +12,7 @@ export class ReconcileState implements StateWithEnter {
   constructor(private board: Board, private match: Match) {}
 
   enter(): void {
-    this.board.reconcile(this.match).then(() => this.reconciled = true);
+    this.board.reconcile(this.match).then(() => (this.reconciled = true));
   }
 
   getName(): string {
@@ -27,4 +27,3 @@ export class ReconcileState implements StateWithEnter {
     return null;
   }
 }
-

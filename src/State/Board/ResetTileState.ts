@@ -29,7 +29,7 @@ export class ResetTileState implements StateWithEnter {
 
   update(): State | null {
     const primaryMoveComplete = this.tile.moveTile(
-      this.tile, 
+      this.tile,
       this.tile.homePosition.toWorldUnit()
     );
 

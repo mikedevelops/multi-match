@@ -11,7 +11,7 @@ export class DebugRuntime {
   __debug__speed(speed: string): void {
     console.log(speed);
     const s = parseFloat(speed);
-    console.log("Setting ticker speed: ", s); 
+    console.log("Setting ticker speed: ", s);
     application.ticker.speed = s;
   }
 }

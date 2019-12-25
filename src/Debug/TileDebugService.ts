@@ -15,7 +15,10 @@ export class TileDebugService {
 
   public draw(tile: AbstractTile): void {
     if (!this.tiles.has(tile)) {
-      const text = new PIXI.Text("", new PIXI.TextStyle({ fill: 0x00ff00, fontSize: "12px" }));
+      const text = new PIXI.Text(
+        "",
+        new PIXI.TextStyle({ fill: 0x00ff00, fontSize: "12px" })
+      );
 
       this.container.addChild(text);
       this.tiles.set(tile, text);
@@ -25,9 +28,7 @@ export class TileDebugService {
     const spritePosition = tile.sprite.getBounds();
     let debugText = tile.position.toString();
 
-    debugText += `\n${tile
-      .stateManager.getState()
-      .getName()}`;
+    debugText += `\n${tile.stateManager.getState().getName()}`;
     debugText += `\n${tile.name}`;
 
     text.x = spritePosition.left;

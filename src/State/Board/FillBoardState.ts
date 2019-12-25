@@ -49,4 +49,3 @@ export class FillBoardState implements StateWithEnter {
     return null;
   }
 }
-

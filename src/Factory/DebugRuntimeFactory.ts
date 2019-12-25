@@ -3,4 +3,4 @@ import { runtime } from "../index";
 
 export const createDebugRuntime = () => {
   return new DebugRuntime(runtime);
-}
+};

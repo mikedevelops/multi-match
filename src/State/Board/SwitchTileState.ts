@@ -29,7 +29,10 @@ export class SwitchTileState implements StateWithEnter, StateWithLeave {
   }
 
   private handleMove(event: PIXI.interaction.InteractionEvent): void {
-    const pointerPosition = new Vector2(event.data.global.x, event.data.global.y);
+    const pointerPosition = new Vector2(
+      event.data.global.x,
+      event.data.global.y
+    );
     const delta = Vector2.subtract(pointerPosition, this.lastPointerPosition);
 
     if (Vector2.equals(this.lastPointerPosition, Vector2.zero())) {
@@ -73,7 +76,7 @@ export class SwitchTileState implements StateWithEnter, StateWithLeave {
     if (this.couldMove) {
       return new PreviewMoveState(this.tile, this.getDirection());
     }
-    
+
     if (this.grabbed) {
       return null;
     }
