@@ -7,6 +7,7 @@ export class TileProvider {
     const types = (Object.keys(TileType)
       .map(n => Number.parseInt(n))
       .filter(n => !Number.isNaN(n)) as unknown) as TileType[keyof TileType][];
+    // const type = types[Math.floor(Math.random() * types.length)];
     const type = types[Math.floor(Math.random() * types.length)];
 
     // TODO: fix these enum types
@@ -28,15 +29,23 @@ export class TileProvider {
   }
 
   public generateSeed(length: number, seedString: string | null = null): Seed {
+    // TODO: this could be neater, feels like the loops could be consolidated
     const seed = new Seed();
+    let seedIndex = 0;
 
     if (seedString !== null) {
-      seedString.split("").forEach((tileSeedId, index) => {
-        const tile = this.createTileFromSeedId(tileSeedId);
+      seedString
+        .replace(/\s/g, "")
+        .split("")
+        .reverse()
+        .forEach((tileSeedId) => {
+          const tile = this.createTileFromSeedId(tileSeedId);
 
-        tile.setSeedIndex(index);
-        seed.enqueue(tile);
-      });
+          tile.seedIndex = seedIndex;
+          tile.setName();
+          seed.enqueue(tile);
+          seedIndex++;
+        });
     }
 
     if (seed.getCount() >= length) {
@@ -48,8 +57,10 @@ export class TileProvider {
     for (let i = 0; i < remaining; i++) {
       const tile = this.getRandomTile();
 
-      tile.setSeedIndex(i);
+      tile.seedIndex = seedIndex;
+      tile.setName();
       seed.enqueue(tile);
+      seedIndex++;
     }
 
     return seed;

@@ -3,146 +3,91 @@ import { StateManager } from "../State/StateManager";
 import * as PIXI from "pixi.js";
 import { AbstractRenderer } from "../Renderer/AbstractRenderer";
 import { Board } from "../Board/Board";
-import { Column } from "../Column/Column";
-import { RUNTIME_MODE, tileDebugService } from "../index";
+import { application, DEFAULT_LERP_SPEED, RUNTIME_MODE } from "../index";
 import { RuntimeMode } from "../Runtime/Runtime";
+import { TileIdleState } from "../State/Tile/TileIdleState";
 
 export enum TileType {
   Nigiri,
   Makizushi,
-  Gunkan
+  Gunkan,
 }
 
 // TODO: tiles should appear to be picked up, they should shrink/grow and
 //  have a shadow
 
 export abstract class AbstractTile {
-  protected position: Vector2 = Vector2.zero();
-  protected boardPosition: Vector2;
-  protected seedIndex: number = -1;
-  protected sprite: PIXI.Sprite;
-  protected board: Board;
-  protected column: Column | null;
-  protected linkedTile: AbstractTile | null = null;
   protected readonly size = new Vector2(1, 1);
 
+  public name: string;
+  public sprite: PIXI.Sprite;
+  public seedIndex: number = -1;
   /**
    * The "resting" tile position in the current board, this should change if
    * the board configuration changes
    */
-  protected homePosition: Vector2;
+  public homePosition: Vector2;
+  public linkedTile: AbstractTile | null = null;
+  public board: Board;
+  public position: Vector2 = Vector2.zero();
+  public reconciled = false;
 
-  constructor(protected stateManager: StateManager) {}
+  constructor(public stateManager: StateManager) {}
 
-  public getBoard(): Board {
-    return this.board;
+  public setName(): void  {
+    this.name = `${this.seedIndex}_${TileType[this.getType()]}`;
   }
 
-  public setBoard(board: Board): void {
-    this.board = board;
-  }
-
-  public setColumn(column: Column): void {
-    this.column = column;
-  }
-
-  public setLinkedTile(tile: AbstractTile): void {
-    this.linkedTile = tile;
-  }
-
-  public getLinkedTile(): AbstractTile | null {
-    return this.linkedTile;
+  public start(): void {
+    this.sprite = new PIXI.Sprite(this.getTexture());
+    this.sprite.name = this.name;
+    this.draw();
+    this.stateManager.setState(new TileIdleState(this));
   }
 
   public update(): void {
-    this.stateManager.update();
     this.updateTexture();
+    this.stateManager.update();
   }
 
-  public getStateManager(): StateManager {
-    return this.stateManager;
-  }
+  public draw(): void {
+    const size = AbstractRenderer.getUnitFromVector(this.size);
+    const position = AbstractRenderer.getUnitFromVector(this.position);
 
-  /**
-   * Returns the position of the tile on the board
-   */
-  public getBoardPosition(): Vector2 {
-    return this.boardPosition;
-  }
-
-  public setBoardPosition(position: Vector2): void {
-    this.boardPosition = position;
-  }
-
-  public setHomePosition(position: Vector2): void {
-    this.homePosition = position;
-  }
-
-  public getHomePosition(): Vector2 {
-    return this.homePosition;
-  }
-
-  /**
-   * Returns the position of the tile in the column
-   */
-  public getColumnPosition(): Vector2 {
-    return this.position;
-  }
-
-  public getSpritePosition(): Vector2 {
-    return new Vector2(this.sprite.x, this.sprite.y);
-  }
-
-  public setSpritePosition(position: Vector2): void {
+    this.sprite.interactive = true;
+    this.sprite.width = size.x;
+    this.sprite.height = size.y;
     this.sprite.x = position.x;
     this.sprite.y = position.y;
   }
 
-  public getSprite(): PIXI.Sprite {
-    return this.sprite;
-  }
-
-  public setSeedIndex(seedIndex: number): void {
-    this.seedIndex = seedIndex;
-  }
-
-  public getSeedIndex(): number {
-    return this.seedIndex;
-  }
-
-  public setPosition(position: Vector2): void {
-    this.position = position;
-  }
-
-  public draw(): void {
-    const sprite = new PIXI.Sprite(this.getTexture());
-    const size = AbstractRenderer.getUnitFromVector(this.size);
-    const position = AbstractRenderer.getUnitFromVector(this.position);
-
-    sprite.interactive = true;
-
-    // TODO: figure out padding/margin here. We cannot simply add the values
-    //  here as when they positions are reset, they will revert back to the
-    //  "true" column position. Will likely need another position property
-    //  like worldPosition or something
-    sprite.width = size.x - 6;
-    sprite.height = size.y - 6;
-    sprite.x = position.x + 3;
-    sprite.y = position.y + 3;
-
-    this.sprite = sprite;
-  }
-
   private updateTexture(): void {
-    if (RUNTIME_MODE === RuntimeMode.Debug) {
-      tileDebugService.draw(this);
-    }
   }
+    
+  public moveTile(tile: AbstractTile = this, target: Vector2): boolean {
+    // TODO: this could be shortenned by ensuring the lerpUntil function
+    // cannot overshoot the target vector
+    const spritePosition = Vector2.fromInterface(tile.sprite);
+    const nextPosition = Vector2.lerpUntil(
+      spritePosition,
+      target, 
+      application.ticker.deltaTime * DEFAULT_LERP_SPEED
+    );
 
-  public getColumn(): Column {
-    return this.column;
+    tile.sprite.position.x = nextPosition.x;
+    tile.sprite.position.y = nextPosition.y;
+
+    if (!Vector2.equals(spritePosition, nextPosition)) {
+      return false;
+    }
+
+    tile.sprite.position.x = target.x;
+    tile.sprite.position.y = target.y;
+
+    return true;
   }
 
   public abstract getType(): TileType;
   public abstract getTexture(): PIXI.RenderTexture;
 }
+

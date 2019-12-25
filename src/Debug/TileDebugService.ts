@@ -3,7 +3,8 @@ import * as PIXI from "pixi.js";
 
 export class TileDebugService {
   private container: PIXI.Container = new PIXI.Container();
-  private tiles: Map<AbstractTile, PIXI.Text> = new Map<
+
+  public tiles: Map<AbstractTile, PIXI.Text> = new Map<
     AbstractTile,
     PIXI.Text
   >();
@@ -14,26 +15,24 @@ export class TileDebugService {
 
   public draw(tile: AbstractTile): void {
     if (!this.tiles.has(tile)) {
-      const text = new PIXI.Text("", new PIXI.TextStyle({ fill: 0x00ff00 }));
+      const text = new PIXI.Text("", new PIXI.TextStyle({ fill: 0x00ff00, fontSize: "12px" }));
 
       this.container.addChild(text);
       this.tiles.set(tile, text);
     }
 
     const text = this.tiles.get(tile);
-    const position = tile.getSprite().getBounds();
-    let debug = tile.getBoardPosition().toString();
+    const spritePosition = tile.sprite.getBounds();
+    let debugText = tile.position.toString();
 
-    debug += `\n${tile
-      .getStateManager()
-      .getState()
+    debugText += `\n${tile
+      .stateManager.getState()
       .getName()}`;
-    debug += `\nSID: ${tile.getSeedIndex()}`;
-    debug += `\nC: ${tile.getColumn().getOrder()}`;
+    debugText += `\n${tile.name}`;
 
-    text.x = position.left;
-    text.y = position.top;
-    text.width = tile.getSprite().width;
-    text.text = debug;
+    text.x = spritePosition.left;
+    text.y = spritePosition.top;
+    text.width = tile.sprite.width;
+    text.text = debugText;
   }
 }

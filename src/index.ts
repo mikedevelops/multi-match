@@ -3,11 +3,11 @@ import { Board } from "./Board/Board";
 import { Vector2 } from "./Vector/Vector2";
 import { TileProvider } from "./Seed/TileProvider";
 import { Runtime, RuntimeMode } from "./Runtime/Runtime";
-import { TileDebugService } from "./Debug/TileDebugService";
+import { StateManager } from "./State/StateManager";
+import { DebugRuntime } from "./Debug/DebugRuntime";
 
-export const BASE_UNIT = 150;
+export const BASE_UNIT = 48;
 export const DEFAULT_LERP_SPEED = 0.15;
-export const RUNTIME_MODE = RuntimeMode.Debug;
 
 export const getApplicationWidth = () => window.innerWidth;
 export const getApplicationHeight = () => window.innerHeight;
@@ -19,22 +19,21 @@ export const application = new PIXI.Application({
   width: getApplicationWidth(),
   height: getApplicationHeight(),
   resolution: 1
-  // antialias: false
 });
 
-const debugStage = new PIXI.Container();
-export const tileDebugService = new TileDebugService(debugStage);
+export const RUNTIME_MODE: RuntimeMode = RuntimeMode.Production;
+// application.ticker.speed = 0.25;
 
-const board = new Board(new Vector2(4, 2));
-// const board = new Board(new Vector2(2, 1));
+const boardStateManager = new StateManager();
+const board = new Board(new Vector2(8, 12), boardStateManager);
 const tileProvider = new TileProvider();
-const tileSeed = tileProvider.generateSeed(500, "GGNGMMNM");
+const tileSeed = tileProvider.generateSeed(10000); 
 
 // DEBUG
 (window as any).board = board;
 (window as any).app = application;
 
-const runtime = new Runtime();
+export const runtime = new Runtime();
 
 // TODO: Create a synchronous loader that does not fetch assets over the
 //  network and can deal with spritesheet json exports.
@@ -51,6 +50,9 @@ loader.onError = console.log;
 loader.load(() => {
   runtime.loadBoard(board, tileSeed);
   runtime.start();
-  application.stage.addChild(debugStage);
-  application.ticker.speed = 0.5;
 });
+
+window.addEventListener('contextmenu', e => e.preventDefault());
+
+// import the debugger module once the runtime is setup
+// import "./Debug/DebugConsole";

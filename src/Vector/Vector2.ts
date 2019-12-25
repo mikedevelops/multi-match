@@ -1,9 +1,18 @@
-import { DEFAULT_LERP_SPEED } from "../index";
+import { DEFAULT_LERP_SPEED, BASE_UNIT } from "../index";
 
 export const DEFAULT_LERP_TOLERANCE = 0.05;
 
-export class Vector2 {
+export interface Vector {
+  x: number;
+  y: number;
+}
+
+export class Vector2 implements Vector {
   constructor(public x = 0, public y = 0) {}
+
+  public clone(): Vector2 {
+    return new Vector2(this.x, this.y);
+  }
 
   public static fromTo(
     start: Vector2,
@@ -29,6 +38,14 @@ export class Vector2 {
     return new Vector2(-1, 0);
   }
 
+  public static down(): Vector2 {
+    return new Vector2(0, 1);
+  }
+
+  public static up(): Vector2 {
+    return new Vector2(0, -1);
+  }
+
   public toString(): string {
     return `${this.x}:${this.y}`;
   }
@@ -39,6 +56,10 @@ export class Vector2 {
 
   public static subtract(a: Vector2, b: Vector2): Vector2 {
     return new Vector2(a.x - b.x, a.y - b.y);
+  }
+
+  public static subtractInt(a: Vector2, i: number): Vector2 {
+    return new Vector2(a.x - i, a.y - i);
   }
 
   public static multiply(a: Vector2, b: Vector2): Vector2 {
@@ -91,5 +112,17 @@ export class Vector2 {
 
   public static invert(vector: Vector2): Vector2 {
     return new Vector2(vector.x * -1, vector.y * -1);
+  }
+
+  public static fromInterface(vector: Vector): Vector2 {
+    return new Vector2(vector.x, vector.y);
+  }
+
+  public toWorldUnit(): Vector2 {
+    return Vector2.multiplyInt(this, BASE_UNIT);
+  }
+
+  public static fromString(position: string): Vector2 {
+    return new Vector2(parseInt(position[0], 10), parseInt(position[2], 10));
   }
 }

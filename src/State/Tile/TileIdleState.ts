@@ -1,7 +1,6 @@
 import { State } from "../State";
 import { StateWithEnter } from "../StateWithEnter";
 import { AbstractTile } from "../../Tile/AbstractTile";
-import { TileGrabbedState } from "./TileGrabbedState";
 
 export const S_TILE_IDLE = "S_TITLE_IDLE";
 
@@ -15,19 +14,10 @@ export class TileIdleState implements StateWithEnter {
   }
 
   update(): State | null {
-    if (!this.grabbed) {
-      return null;
-    }
-
-    return new TileGrabbedState(this.tile);
+    return null;
   }
 
   enter(): void {
-    // Remove any tile links that may have been established
-    this.tile.setLinkedTile(null);
 
-    this.tile.getSprite().addListener("pointerdown", () => {
-      this.grabbed = true;
-    });
   }
 }

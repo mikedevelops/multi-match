@@ -3,6 +3,8 @@ import { isStateWithEnter } from "./StateWithEnter";
 import { isStateWithLeave } from "./StateWithLeave";
 import { isStateWithInput } from "./StateWithInput";
 import * as PIXI from "pixi.js";
+import { RUNTIME_MODE } from "../index";
+import { RuntimeMode } from "../Runtime/Runtime";
 
 export class StateManager {
   private state: State;
@@ -27,7 +29,6 @@ export class StateManager {
   }
 
   public setState(state: State): void {
-    console.log(this.id, state.getName());
     if (this.state !== undefined && isStateWithLeave(this.state)) {
       this.state.leave();
     }
